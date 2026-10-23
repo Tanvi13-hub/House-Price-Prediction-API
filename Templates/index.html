@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% block title %}Price Predictor | Real Estate Price Prediction{% endblock %}
+
+{% block style %}
+    .head{ background:linear-gradient(180deg,var(--navy) 0%, var(--navy-2) 100%); color:#fff; padding-bottom:78px; }
+    .head .brand{ color:#fff; }
+    .head .nav-links a{ color:#fff; }
+    .title{ max-width:1100px; margin:0 auto; padding:10px 24px 0; }
+    .title h1{ margin:0 0 6px; font-size:32px; letter-spacing:-0.3px; }
+    .title p{ margin:0; color:#c3d0ea; }
+
+    .layout{
+        max-width:1000px; margin:-52px auto 0; padding:0 24px;
+        display:grid; grid-template-columns:1.6fr 1fr; gap:24px; align-items:start;
+    }
+    .card{
+        background:var(--card); border:1px solid var(--border); border-radius:14px;
+        box-shadow:0 10px 30px rgba(11,27,58,0.10); padding:28px;
+    }
+    .card h2{ margin:0 0 4px; font-size:20px; color:var(--navy); }
+    .card .sub{ margin:0 0 22px; color:var(--muted); font-size:14.5px; }
+
+    .grid{ display:grid; grid-template-columns:1fr 1fr; gap:18px 18px; }
+    .field label{ display:block; font-size:13.5px; font-weight:600; margin-bottom:6px; color:var(--navy); }
+    .field small{ display:block; margin-top:4px; font-size:12px; color:var(--muted); }
+    input{
+        width:100%; padding:11px 12px; font-size:15px; color:var(--text);
+        border:1px solid var(--border); border-radius:8px; background:#fff;
+        transition:border-color 0.2s, box-shadow 0.2s;
+    }
+    input::placeholder{ color:#9aa7bd; }
+    input:focus{ outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(47,111,237,0.18); }
+
+    .actions{ display:flex; gap:12px; margin-top:24px; }
+    .actions button{
+        flex:1; padding:13px; font-size:16px; font-weight:600; color:#fff;
+        background:var(--accent); border:none; border-radius:8px; cursor:pointer; transition:background 0.2s;
+    }
+    .actions button:hover{ background:var(--accent-dark); }
+    .reset{
+        flex:0 0 110px; text-align:center; padding:13px; font-weight:600; font-size:15px;
+        border:1px solid var(--border); border-radius:8px; color:var(--muted); text-decoration:none; background:#fff;
+    }
+    .reset:hover{ background:var(--bg); }
+
+    .side .label{ font-size:12.5px; letter-spacing:1.2px; text-transform:uppercase; color:var(--muted); margin-bottom:10px; }
+    .result{ border-radius:12px; padding:22px; background:var(--ok-bg); color:var(--ok-text); }
+    .result .value{ font-size:34px; font-weight:700; line-height:1.1; }
+    .result .unit{ font-size:13.5px; margin-top:6px; opacity:0.9; }
+    .result.error{ background:var(--err-bg); color:var(--err-text); font-size:15px; font-weight:600; }
+    .empty{ border:1px dashed var(--border); border-radius:12px; padding:22px; color:var(--muted); font-size:14.5px; background:#fbfcfe; }
+
+    .note{ margin-top:18px; font-size:13px; color:var(--muted); }
+    .note b{ color:var(--navy); }
+
+    @media (max-width:820px){
+        .layout{ grid-template-columns:1fr; margin-top:-48px; }
+        .grid{ grid-template-columns:1fr; }
+        .title h1{ font-size:26px; }
+    }
+{% endblock %}
+
+{% block body %}
+<div class="head">
+    <nav class="nav">
+        <a class="brand" href="/">
+            <span class="brand-mark"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg></span>
+            EstateIQ
+        </a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+        </div>
+    </nav>
+    <div class="title">
+        <h1>Price Predictor</h1>
+        <p>Enter the property details to get an estimated price per unit area.</p>
+    </div>
+</div>
+
+<div class="layout">
+    <div class="card">
+        <h2>Property details</h2>
+        <p class="sub">All fields are required.</p>
+
+        <form action="/predict" method="post">
+            <div class="grid">
+                <div class="field">
+                    <label for="transaction_date">Transaction Date</label>
+                    <input type="number" step="any" id="transaction_date" name="transaction_date"
+                           placeholder="e.g. 2013.5" value="{{ request.form.get('transaction_date', '') }}" required>
+                    <small>Year with fraction (2012.7 to 2013.6)</small>
+                </div>
+                <div class="field">
+                    <label for="house_age">House Age (years)</label>
+                    <input type="number" step="any" id="house_age" name="house_age"
+                           placeholder="e.g. 15" value="{{ request.form.get('house_age', '') }}" required>
+                    <small>Typical range: 0 to 44</small>
+                </div>
+                <div class="field">
+                    <label for="distance">Distance to MRT (meters)</label>
+                    <input type="number" step="any" id="distance" name="distance"
+                           placeholder="e.g. 500" value="{{ request.form.get('distance', '') }}" required>
+                    <small>Nearest MRT station, up to about 6500 m</small>
+                </div>
+                <div class="field">
+                    <label for="stores">Convenience Stores</label>
+                    <input type="number" step="1" id="stores" name="stores"
+                           placeholder="e.g. 5" value="{{ request.form.get('stores', '') }}" required>
+                    <small>Number of stores nearby (0 to 10)</small>
+                </div>
+                <div class="field">
+                    <label for="latitude">Latitude</label>
+                    <input type="number" step="any" id="latitude" name="latitude"
+                           placeholder="e.g. 24.97" value="{{ request.form.get('latitude', '') }}" required>
+                    <small>Typical range: 24.93 to 25.01</small>
+                </div>
+                <div class="field">
+                    <label for="longitude">Longitude</label>
+                    <input type="number" step="any" id="longitude" name="longitude"
+                           placeholder="e.g. 121.54" value="{{ request.form.get('longitude', '') }}" required>
+                    <small>Typical range: 121.47 to 121.57</small>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button type="submit">Predict Price</button>
+                <a class="reset" href="/home">Reset</a>
+            </div>
+        </form>
+    </div>
+
+    <div class="card side">
+        <div class="label">Estimated price</div>
+        {% if prediction_text and prediction_value %}
+            <div class="result">
+                <div class="value">{{ prediction_value }}</div>
+                <div class="unit">price per unit area</div>
+            </div>
+        {% elif prediction_text %}
+            <div class="result error">{{ prediction_text }}</div>
+        {% else %}
+            <div class="empty">Your estimate will appear here after you submit the form.</div>
+        {% endif %}
+        <div class="note">
+            <b>Note:</b> This is a model estimate based on 414 historical transactions. Use it for learning and demonstration, not as financial advice.
+        </div>
+    </div>
+</div>
+
+<div class="footer">Built with Python, Flask and scikit-learn</div>
+{% endblock %}

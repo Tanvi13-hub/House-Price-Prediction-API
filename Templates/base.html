@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Real Estate Price Prediction{% endblock %}</title>
+
+<style>
+    :root{
+        --navy:#0b1b3a;
+        --navy-2:#13294f;
+        --accent:#2f6fed;
+        --accent-dark:#2459c4;
+        --bg:#f6f8fb;
+        --card:#ffffff;
+        --text:#0f1b33;
+        --muted:#5b6b86;
+        --border:#dde3ee;
+        --ok-bg:#eefaf3;
+        --ok-text:#0a6b3d;
+        --err-bg:#fdf0f0;
+        --err-text:#a31f1f;
+    }
+    *{ box-sizing:border-box; }
+    html{ scroll-behavior:smooth; }
+    body{
+        margin:0;
+        font-family:"Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+        background:var(--bg);
+        color:var(--text);
+        line-height:1.55;
+    }
+    a{ color:inherit; }
+
+    /* ---------- Navbar ---------- */
+    .nav{
+        display:flex; align-items:center; justify-content:space-between;
+        max-width:1100px; margin:0 auto; padding:18px 24px;
+    }
+    .brand{
+        display:flex; align-items:center; gap:10px;
+        font-weight:700; font-size:17px; text-decoration:none; letter-spacing:0.2px;
+    }
+    .brand-mark{
+        width:30px; height:30px; border-radius:8px;
+        background:var(--accent);
+        display:grid; place-items:center;
+    }
+    .brand-mark svg{ width:18px; height:18px; fill:none; stroke:#fff; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+    .nav-links{ display:flex; align-items:center; gap:26px; font-size:14.5px; }
+    .nav-links a{ text-decoration:none; opacity:0.85; }
+    .nav-links a:hover{ opacity:1; }
+
+    .btn{
+        display:inline-block; padding:12px 24px; border-radius:8px;
+        font-size:15px; font-weight:600; text-decoration:none; cursor:pointer;
+        border:1px solid transparent; transition:background 0.2s, transform 0.1s;
+    }
+    .btn-primary{ background:var(--accent); color:#fff; }
+    .btn-primary:hover{ background:var(--accent-dark); }
+    .btn-ghost{ border-color:rgba(255,255,255,0.35); color:#fff; }
+    .btn-ghost:hover{ background:rgba(255,255,255,0.08); }
+    .btn-sm{ padding:9px 18px; font-size:14px; }
+
+    .wrap{ max-width:1100px; margin:0 auto; padding:0 24px; }
+    .footer{
+        text-align:center; color:var(--muted); font-size:13px;
+        padding:30px 20px 36px; border-top:1px solid var(--border); margin-top:60px;
+    }
+
+    {% block style %}{% endblock %}
+</style>
+</head>
+<body>
+{% block body %}{% endblock %}
+</body>
+</html>
